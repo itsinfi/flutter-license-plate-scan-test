@@ -14,7 +14,6 @@ class CarridaScanner extends BaseScanner {
 
   @override
   Future<bool> scan(File image) {
-    print('!!!!! final file $image');
-    return Future.microtask(() => false);
+    return Future.microtask(() => true);
   }
 }

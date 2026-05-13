@@ -87,6 +87,19 @@ class _ScannerPageState extends State<ScannerPage> {
 
   @override
   Widget build(BuildContext context) {
+    late Color containerBackgroundColor;
+
+    switch (_result) {
+      case true:
+        containerBackgroundColor = Colors.lightGreen.withAlpha(100);
+        break;
+      case false:
+        containerBackgroundColor = Colors.red.withAlpha(100);
+        break;
+      default:
+        containerBackgroundColor = Colors.transparent;
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -107,6 +120,24 @@ class _ScannerPageState extends State<ScannerPage> {
                           padding: const EdgeInsets.all(16.0),
                           child: Column(
                             children: [
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Visibility(
+                                  visible: _result != null,
+                                  child: Container(
+                                    color: containerBackgroundColor,
+                                    width: double.infinity,
+                                    child: Padding(
+                                      padding: EdgeInsetsGeometry.all(16.0),
+                                      child: Text(
+                                        'result: $_result',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+
                               const Spacer(),
 
                               Row(
