@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:parking_ticket_scan_test/scanner/base_scanner.dart';
-import 'package:camera/camera.dart';
+import 'package:camera/camera.dart' as cam;
+import 'package:image/image.dart' as img;
+
+const cam.ResolutionPreset CAMERA_RESOLUTION = cam.ResolutionPreset.high;
+const int IMAGE_QUALITY = 90;
 
 class ScannerPage extends StatefulWidget {
   final BaseScanner scanner;
@@ -12,28 +18,65 @@ class ScannerPage extends StatefulWidget {
 }
 
 class _ScannerPageState extends State<ScannerPage> {
-  CameraController? _controller;
+  cam.CameraController? _controller;
   Future<void>? _initializeControllerFuture;
+  int _cameraIndex = 0;
+  bool? _result;
 
   @override
   void initState() {
     super.initState();
-    _setupCamera();
+    _setupCamera(_cameraIndex);
   }
 
-  Future<void> _setupCamera() async {
-    final cameras = await availableCameras();
-    final camera = cameras.first;
+  Future<void> _setupCamera(int cameraIndex) async {
+    final cameras = await cam.availableCameras();
+    final camera = cameras[cameraIndex % cameras.length];
 
-    _controller = CameraController(
+    _controller = cam.CameraController(
       camera,
-      ResolutionPreset.medium,
+      CAMERA_RESOLUTION,
       enableAudio: false,
     );
 
     _initializeControllerFuture = _controller!.initialize();
 
     setState(() {});
+  }
+
+  Future<void> _switchCamera() async {
+    _controller?.dispose();
+    _cameraIndex++;
+    await _setupCamera(_cameraIndex);
+  }
+
+  Future<void> _handleScan() async {
+    if (_controller != null && _controller!.value.isInitialized) {
+      final cam.XFile file = await _controller!.takePicture();
+
+      final bytes = await file.readAsBytes();
+      final original = img.decodeImage(bytes);
+
+      if (original == null) return;
+
+      final resized = img.copyResize(
+        original,
+        width: widget.scanner.width,
+        height: widget.scanner.height,
+      );
+
+      final resizedFile = File(file.path.replaceFirst('.jpg', '_scan.jpg'));
+
+      final finalFile = await resizedFile.writeAsBytes(
+        img.encodeJpg(resized, quality: IMAGE_QUALITY),
+      );
+
+      final result = await widget.scanner.scan(finalFile);
+
+      setState(() {
+        _result = result;
+      });
+    }
   }
 
   @override
@@ -58,7 +101,7 @@ class _ScannerPageState extends State<ScannerPage> {
                   return Stack(
                     fit: StackFit.expand,
                     children: [
-                      CameraPreview(_controller!),
+                      cam.CameraPreview(_controller!),
                       SafeArea(
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -71,17 +114,14 @@ class _ScannerPageState extends State<ScannerPage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   ElevatedButton(
-                                    onPressed: () {
-                                      debugPrint("Left button pressed");
-                                    },
-                                    child: const Text("Left"),
+                                    onPressed: _switchCamera,
+                                    child: const Icon(
+                                      Icons.switch_camera_outlined,
+                                    ),
                                   ),
-
                                   ElevatedButton(
-                                    onPressed: () {
-                                      debugPrint("Right button pressed");
-                                    },
-                                    child: const Text("Right"),
+                                    onPressed: _handleScan,
+                                    child: const Text('scan.'),
                                   ),
                                 ],
                               ),
