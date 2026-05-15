@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:parking_ticket_scan_test/scanner/base_scanner.dart';
+import 'package:parking_ticket_scan_test/scanner/carrida_scanner.dart';
 import 'package:parking_ticket_scan_test/services/carrida_sdk_service.dart';
 import 'package:parking_ticket_scan_test/pages/home_page.dart';
 import 'package:parking_ticket_scan_test/services/environment_service.dart';
@@ -24,6 +26,8 @@ class AppState extends State<App> {
   late EnvironmentService environmentService;
   late CarridaSdkService carridaSdkService;
 
+  final List<BaseScanner> scanners = [];
+
   @override
   void initState() {
     super.initState();
@@ -44,6 +48,8 @@ class AppState extends State<App> {
     carridaSdkService = CarridaSdkService();
     String licenseKey = environmentService.get('CARRIDA_SDK_LICENSE_KEY') ?? '';
     await carridaSdkService.init(CarridaSdkServiceArgs(licenseKey));
+
+    scanners.add(CarridaScanner(carridaSdkService));
   }
 
   @override
@@ -59,7 +65,7 @@ class AppState extends State<App> {
               future: _initAppFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                  return HomePage(title: widget.title);
+                  return HomePage(title: widget.title, scanners: scanners);
                 } else {
                   return const Center(child: CircularProgressIndicator());
                 }

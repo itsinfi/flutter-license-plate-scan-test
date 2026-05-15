@@ -13,7 +13,7 @@ class AnprScanner extends BaseScanner {
   int height = 720;
 
   @override
-  Future<bool> scan(File image) {
-    return Future.microtask(() => false);
+  Future<bool> scan(File image) async {
+    return await Future.microtask(() => false);
   }
 }

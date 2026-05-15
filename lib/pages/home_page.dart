@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:parking_ticket_scan_test/pages/scanner_page.dart';
 import 'package:parking_ticket_scan_test/scanner/base_scanner.dart';
 import 'package:parking_ticket_scan_test/scanner/carrida_scanner.dart';
+import 'package:parking_ticket_scan_test/services/carrida_sdk_service.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key, required this.title});
-
   final String title;
+  final List<BaseScanner> scanners;
 
-  final List<BaseScanner> scanners = [CarridaScanner()];
+  const HomePage({super.key, required this.title, required this.scanners});
 
   @override
   State<HomePage> createState() => _HomePageState();
