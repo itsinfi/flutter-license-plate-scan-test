@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:parking_ticket_scan_test/carrida/carrida_sdk_bridge.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:parking_ticket_scan_test/services/carrida_sdk_service.dart';
 import 'package:parking_ticket_scan_test/pages/home_page.dart';
+import 'package:parking_ticket_scan_test/services/environment_service.dart';
 
 void main() {
   runApp(const App());
@@ -16,18 +18,32 @@ class App extends StatefulWidget {
 }
 
 class AppState extends State<App> {
-  Future<void>? _initializeCarridaSdkFuture;
-  bool carridaSdkIsInitialized = false;
+  Future<void>? _initAppFuture;
+  bool isInitialized = false;
+
+  late EnvironmentService environmentService;
+  late CarridaSdkService carridaSdkService;
 
   @override
   void initState() {
     super.initState();
 
-    _initializeCarridaSdkFuture = CarridaSdkBridge.initialize();
+    carridaSdkService = CarridaSdkService();
+
+    _initAppFuture = initApp();
 
     setState(() {
-      carridaSdkIsInitialized = true;
+      isInitialized = true;
     });
+  }
+
+  Future<void> initApp() async {
+    environmentService = EnvironmentService();
+    await environmentService.init(EnvironmentServiceArgs('.env'));
+
+    carridaSdkService = CarridaSdkService();
+    String licenseKey = environmentService.get('CARRIDA_SDK_LICENSE_KEY') ?? '';
+    await carridaSdkService.init(CarridaSdkServiceArgs(licenseKey));
   }
 
   @override
@@ -37,10 +53,10 @@ class AppState extends State<App> {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: !carridaSdkIsInitialized
+      home: !isInitialized
           ? const Center(child: CircularProgressIndicator())
           : FutureBuilder(
-              future: _initializeCarridaSdkFuture,
+              future: _initAppFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return HomePage(title: widget.title);
