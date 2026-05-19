@@ -71,7 +71,7 @@ class _ScannerPageState extends State<ScannerPage> {
         img.encodeJpg(resized, quality: IMAGE_QUALITY),
       );
 
-      final result = await widget.scanner.scan(finalFile);
+      final result = await widget.scanner.scan(finalFile, "LTK 429");
 
       setState(() {
         _result = result;

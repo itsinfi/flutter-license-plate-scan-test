@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:parking_ticket_scan_test/interfaces/license_plate_from_image_readable.dart';
 import 'package:parking_ticket_scan_test/services/base_service.dart';
 
 const String CHANNEL = 'carrida_sdk_channel';
@@ -19,7 +20,8 @@ class CarridaSdkServiceArgs {
   CarridaSdkServiceArgs(this.licenseKey, this.deviceActivationKey);
 }
 
-class CarridaSdkService extends BaseService<CarridaSdkServiceArgs> {
+class CarridaSdkService extends BaseService<CarridaSdkServiceArgs>
+    implements LicensePlateFromImageReadable {
   final platform = MethodChannel(CHANNEL);
 
   @override
@@ -39,16 +41,22 @@ class CarridaSdkService extends BaseService<CarridaSdkServiceArgs> {
     isInitialized = true;
   }
 
-  Future<String?> readLicensePlateFromImage(String imagePath) async {
+  @override
+  Future<String?> readLicensePlateFromImage(File image) async {
     try {
+      final imagePath = image.path;
+
       final result = await platform.invokeMethod(
         READ_LP_FROM_IMAGE_METHOD_NAME,
         {READ_LP_FROM_IMAGE_PATH_ARGUMENT_NAME: imagePath},
       );
 
       print('$READ_LP_FROM_IMAGE_METHOD_NAME result: $result');
+
+      return result;
     } on PlatformException catch (e) {
       print('$READ_LP_FROM_IMAGE_METHOD_NAME error\n${e.code}\n${e.message}');
+      return null;
     }
   }
 }

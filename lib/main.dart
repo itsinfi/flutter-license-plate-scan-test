@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:parking_ticket_scan_test/scanner/base_scanner.dart';
 import 'package:parking_ticket_scan_test/scanner/carrida_scanner.dart';
+import 'package:parking_ticket_scan_test/scanner/google_ml_kit_scanner.dart';
 import 'package:parking_ticket_scan_test/services/carrida_sdk_service.dart';
 import 'package:parking_ticket_scan_test/pages/home_page.dart';
 import 'package:parking_ticket_scan_test/services/environment_service.dart';
+import 'package:parking_ticket_scan_test/services/google_ml_kit_service.dart';
 
 void main() {
   runApp(const App());
@@ -25,14 +27,13 @@ class AppState extends State<App> {
 
   late EnvironmentService environmentService;
   late CarridaSdkService carridaSdkService;
+  late GoogleMlKitService googleMlKitService;
 
   final List<BaseScanner> scanners = [];
 
   @override
   void initState() {
     super.initState();
-
-    carridaSdkService = CarridaSdkService();
 
     _initAppFuture = initApp();
 
@@ -41,10 +42,7 @@ class AppState extends State<App> {
     });
   }
 
-  Future<void> initApp() async {
-    environmentService = EnvironmentService();
-    await environmentService.init(EnvironmentServiceArgs('.env'));
-
+  Future<void> configureCarridaScanner() async {
     carridaSdkService = CarridaSdkService();
     String licenseKey = environmentService.get('CARRIDA_SDK_LICENSE_KEY') ?? '';
     String? deviceActivationKey = environmentService.get(
@@ -53,8 +51,26 @@ class AppState extends State<App> {
     await carridaSdkService.init(
       CarridaSdkServiceArgs(licenseKey, deviceActivationKey),
     );
+    final carridaScanner = CarridaScanner(carridaSdkService);
+    scanners.add(carridaScanner);
+  }
 
-    scanners.add(CarridaScanner(carridaSdkService));
+  Future<void> configureGoogleMlKitScanner() async {
+    googleMlKitService = GoogleMlKitService();
+    await googleMlKitService.init(GoogleMlKitServiceArgs());
+    final googleMlKitScanner = GoogleMlKitScanner(googleMlKitService);
+    scanners.add(googleMlKitScanner);
+  }
+
+  Future<void> initApp() async {
+    environmentService = EnvironmentService();
+    await environmentService.init(EnvironmentServiceArgs('.env'));
+
+    // // Configure CARRIDA scanner
+    // await configureCarridaScanner();
+
+    // Configure Google ML Kit scanner
+    await configureGoogleMlKitScanner();
   }
 
   @override

@@ -6,5 +6,5 @@ abstract class BaseScanner {
   abstract int width;
   abstract int height;
 
-  Future<bool> scan(File image);
+  Future<bool> scan(File image, String expectedLicensePlate);
 }

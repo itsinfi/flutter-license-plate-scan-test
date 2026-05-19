@@ -17,11 +17,8 @@ class CarridaScanner extends BaseScanner {
   CarridaScanner(this.service);
 
   @override
-  Future<bool> scan(File image) async {
-    final String? licensePlate = await service.readLicensePlateFromImage(
-      image.path,
-    );
-
-    return await Future.microtask(() => true);
+  Future<bool> scan(File image, String expectedLicensePlate) async {
+    final String? licensePlate = await service.readLicensePlateFromImage(image);
+    return licensePlate == expectedLicensePlate;
   }
 }
