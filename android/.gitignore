@@ -14,7 +14,7 @@ key.properties
 **/*.jks
 
 # carrida sdk
-app/libs/carrida-sdk.aar
+app/libs/*
 
 # .hprof
 **.hprof

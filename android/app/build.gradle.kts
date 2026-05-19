@@ -34,6 +34,9 @@ android {
         targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        ndk { // needed because only arm binaries are provided in carrida sdk
+            abiFilters.add("arm64-v8a")
+        }
     }
 
     buildTypes {

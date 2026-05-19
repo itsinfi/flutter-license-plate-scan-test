@@ -13,7 +13,7 @@ void main() {
 class App extends StatefulWidget {
   const App({super.key});
 
-  final title = 'License Plat Scan Test';
+  final title = 'License Plate Scan Test';
 
   @override
   State<App> createState() => AppState();
@@ -47,7 +47,12 @@ class AppState extends State<App> {
 
     carridaSdkService = CarridaSdkService();
     String licenseKey = environmentService.get('CARRIDA_SDK_LICENSE_KEY') ?? '';
-    await carridaSdkService.init(CarridaSdkServiceArgs(licenseKey));
+    String? deviceActivationKey = environmentService.get(
+      'CARRIDA_SDK_DEVICE_ACTIVATION_KEY',
+    );
+    await carridaSdkService.init(
+      CarridaSdkServiceArgs(licenseKey, deviceActivationKey),
+    );
 
     scanners.add(CarridaScanner(carridaSdkService));
   }
