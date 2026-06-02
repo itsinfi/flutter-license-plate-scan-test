@@ -4,8 +4,8 @@ just testing out different sdks/libs for scanning vehicle license plates.
 
 ## Getting Started
 
-1. copy .env.example as .env
-2. insert your CARRIDA SDK key
-3. run `flutter pub get`
-4. run `flutter run` (make sure you run it on an android emulator)
-
+1. install flutter version 3.44.0
+2. copy .env.example as .env
+3. insert your CARRIDA SDK key
+4. run `flutter pub get`
+5. run `flutter run` (make sure you run it on an android emulator)

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:parking_ticket_scan_test/scanner/base_scanner.dart';
 import 'package:parking_ticket_scan_test/scanner/carrida_scanner.dart';
 import 'package:parking_ticket_scan_test/scanner/google_ml_kit_scanner.dart';
