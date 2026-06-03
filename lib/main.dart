@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:parking_ticket_scan_test/scanner/base_scanner.dart';
-import 'package:parking_ticket_scan_test/scanner/carrida_scanner.dart';
+// import 'package:parking_ticket_scan_test/scanner/carrida_scanner.dart';
 import 'package:parking_ticket_scan_test/scanner/google_ml_kit_scanner.dart';
-import 'package:parking_ticket_scan_test/services/carrida_sdk_service.dart';
+// import 'package:parking_ticket_scan_test/services/carrida_sdk_service.dart';
 import 'package:parking_ticket_scan_test/pages/home_page.dart';
 import 'package:parking_ticket_scan_test/services/environment_service.dart';
 import 'package:parking_ticket_scan_test/services/google_ml_kit_service.dart';
@@ -25,7 +25,7 @@ class AppState extends State<App> {
   bool isInitialized = false;
 
   late EnvironmentService environmentService;
-  late CarridaSdkService carridaSdkService;
+  // late CarridaSdkService carridaSdkService;
   late GoogleMlKitService googleMlKitService;
 
   final List<BaseScanner> scanners = [];
@@ -41,18 +41,18 @@ class AppState extends State<App> {
     });
   }
 
-  Future<void> configureCarridaScanner() async {
-    carridaSdkService = CarridaSdkService();
-    String licenseKey = environmentService.get('CARRIDA_SDK_LICENSE_KEY') ?? '';
-    String? deviceActivationKey = environmentService.get(
-      'CARRIDA_SDK_DEVICE_ACTIVATION_KEY',
-    );
-    await carridaSdkService.init(
-      CarridaSdkServiceArgs(licenseKey, deviceActivationKey),
-    );
-    final carridaScanner = CarridaScanner(carridaSdkService);
-    scanners.add(carridaScanner);
-  }
+  // Future<void> configureCarridaScanner() async {
+  //   carridaSdkService = CarridaSdkService();
+  //   String licenseKey = environmentService.get('CARRIDA_SDK_LICENSE_KEY') ?? '';
+  //   String? deviceActivationKey = environmentService.get(
+  //     'CARRIDA_SDK_DEVICE_ACTIVATION_KEY',
+  //   );
+  //   await carridaSdkService.init(
+  //     CarridaSdkServiceArgs(licenseKey, deviceActivationKey),
+  //   );
+  //   final carridaScanner = CarridaScanner(carridaSdkService);
+  //   scanners.add(carridaScanner);
+  // }
 
   Future<void> configureGoogleMlKitScanner() async {
     googleMlKitService = GoogleMlKitService();

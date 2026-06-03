@@ -10,7 +10,5 @@ note:
 ## Getting Started
 
 1. install flutter version 3.44.0
-2. copy .env.example as .env
-3. insert your CARRIDA SDK key
-4. run `flutter pub get`
-5. run `flutter run` (make sure you run it on an android emulator)
+2. run `flutter pub get`
+3. run `flutter run` (make sure you run it on an android emulator)

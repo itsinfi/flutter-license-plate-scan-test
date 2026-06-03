@@ -6,8 +6,8 @@ plugins {
 }
 
 dependencies {
-    implementation(files("libs/carrida-sdk.aar")) // carrida sdk
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5") // for carrida sdk
+    // implementation(files("libs/carrida-sdk.aar")) // carrida sdk
+    // coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5") // for carrida sdk
 }
 
 android {
@@ -18,7 +18,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
-        isCoreLibraryDesugaringEnabled = true // for carrida sdk
+        // isCoreLibraryDesugaringEnabled = true // for carrida sdk
     }
 
     kotlinOptions {
@@ -34,9 +34,9 @@ android {
         targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        ndk { // needed because only arm binaries are provided in carrida sdk
-            abiFilters.add("arm64-v8a")
-        }
+        // ndk { // needed because only arm binaries are provided in carrida sdk
+        //     abiFilters.add("arm64-v8a")
+        // }
     }
 
     buildTypes {
