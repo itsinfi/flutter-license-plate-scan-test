@@ -2,6 +2,11 @@
 
 just testing out different sdks/libs for scanning vehicle license plates.
 
+note:
+-   carrida sdk is only compatible with arm (see version/arm).
+-   for x86, see branch version/x86
+
+
 ## Getting Started
 
 1. install flutter version 3.44.0
